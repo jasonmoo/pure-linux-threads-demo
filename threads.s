@@ -35,18 +35,31 @@ global _start
 
 %define STACK_SIZE	(4096 * 1024)
 
-%define MAX_LINES	1000000	; number of output lines before exiting
+%define MAX_LINES	100<<20; number of output lines before exiting
 
 section .data
 count:	dq MAX_LINES
 
 section .text
 _start:
-	; Spawn a few threads
+
 	mov rdi, threadfn
 	call thread_create
 	mov rdi, threadfn
 	call thread_create
+	mov rdi, threadfn
+	call thread_create
+	mov rdi, threadfn
+	call thread_create
+
+;;	mov rdi, threadfn
+;;	call thread_create
+;;	mov rdi, threadfn
+;;	call thread_create
+;;	mov rdi, threadfn
+;;	call thread_create
+;;	mov rdi, threadfn
+;;	call thread_create
 
 .loop:	call check_count
 	mov rdi, .hello
@@ -61,8 +74,10 @@ threadfn:
 	call check_count
 	mov rdi, .hello
 	call puts
-	jmp threadfn
-.hello:	db `Hello from \e[91;1mthread\e[0m!\n\0`
+        jmp threadfn
+
+
+.hello:	db `Hello from \e[91;1mthread \e[0m!\n\0`
 
 ;; void check_count(void) -- may not return
 check_count:
